@@ -35,7 +35,7 @@ app.post('/', (req, res) => {
 });
 
 // Toggle completion status of a todo
-app.patch('/:id/toggle', (req, res) => {
+app.patch('/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const todo = todos.find(t => t.id === id);
     if (todo) {
