@@ -29,7 +29,7 @@ function App() {
   };
 
   const toggleTodo = (id) => {
-    fetch(`http://localhost:3000/${id}`, { method: 'PATCH' })
+    fetch(`http://localhost:3000/${id}/toggle`, { method: 'PATCH' })
       .then(response => response.json())
       .then(updatedTodo => {
         setTodos(todos.map(todo => todo.id === id ? updatedTodo : todo));
