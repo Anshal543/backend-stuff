@@ -1,11 +1,120 @@
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+
+const App = () => {
+
+  const navigate = useNavigate()
+
+  const [todos, setTodos] = useState([])
+  const [newTodo, setNewTodo] = useState("")
+  const [category, setCategory] = useState("")
+
+  useEffect(() => {
+    const fetchTodos = async () => {
+      const data = await axios.get('/todos')
+      setTodos(data.data)
+      console.log(data.data);
+    }
+    fetchTodos()
+  },[])
+
+  const handlenewTodo =async  (e) => {
+    e.preventDefault()
+
+    if (!newTodo.trim() || !category.trim()) return;
+
+    const data = await axios.post('/todos', {title: newTodo,category: category})
+    setTodos([...todos, data.data])
+    setNewTodo('')
+    setCategory('')
+  }
+
+  const deleteTodo = async (id) => {
+    await axios.delete(`/todos/${id}`)
+    setTodos(todos.filter(todo => todo._id !== id))
+  }
+
+  return (
+    <div>
+      <form action="" onSubmit={handlenewTodo}>
+
+      <input
+        value={newTodo}
+        onChange={(e) => setNewTodo(e.target.value)}
+        type="text" name="" id="" />
+       <input
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        type="text" name="" id="" />
+      <button  type='submit'>add todo</button>
+        </form>
+
+      {todos.map(todo => (
+        <div>
+
+        <h1 key={todo._id}>{todo.title}--{todo.category}</h1>
+        <button onClick={()=>deleteTodo(todo._id)}>delete todo</button>
+        <button onClick={()=>navigate(`/todos/update/${todo._id}`)}>edit todo</button>
+        </div>
+
+      ))}
+    </div>
+  )
+}
+
+export default App
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 import { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
-  const [editTodoId, setEditTodoId] = useState(null); // Track which todo is being edited
-  const [editText, setEditText] = useState(""); // Store the edited text
+  const [editTodoId, setEditTodoId] = useState(null); 
+  const [editText, setEditText] = useState(""); 
 
   useEffect(() => {
     fetch("http://localhost:3000")
@@ -57,7 +166,7 @@ function App() {
       .then(response => response.json())
       .then(updatedTodo => {
         setTodos(todos.map(todo => todo.id === id ? updatedTodo : todo));
-        setEditTodoId(null); // Exit editing mode
+        setEditTodoId(null); 
       });
   };
 
@@ -106,3 +215,5 @@ function App() {
 }
 
 export default App;
+
+*/

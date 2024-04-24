@@ -1,4 +1,56 @@
 import express from 'express';
+import dotenv from 'dotenv';
+import connectDB from './db/index.js';
+import todoRouter from './routers/todo.router.js';
+
+dotenv.config({
+    path: './.env'
+});
+
+connectDB();
+
+const app = express();
+app.use(express.json());
+app.use('/todos', todoRouter);
+
+
+app.listen(process.env.PORT, () => {
+    console.log('Server is running on http://localhost:3000');
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 
@@ -70,3 +122,5 @@ app.delete('/:id', (req, res) => {
         res.status(404).send({ message: 'Todo not found' });
     }
 });
+
+*/
