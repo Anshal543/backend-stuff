@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +8,21 @@ const UpdateTodo = () => {
   const [updatedCategory, setUpdatedCategory] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
-  // console.log(id);
+
+  useEffect(() => {
+    const fetchTodo = async () => {
+      try {
+        const response = await axios.get(`/todos/update/${id}`);
+        const { title, category } = response.data;
+        setUpdatedTitle(title);
+        setUpdatedCategory(category);
+      } catch (error) {
+        console.error("Error fetching todo:", error);
+      }
+    };
+    fetchTodo();
+  }, [id]);
+
   const handleUpdateTodo = async (e) => {
     e.preventDefault();
     try {
@@ -22,7 +36,7 @@ const UpdateTodo = () => {
     }
   };
 
-  const handleCancle = () => {
+  const handleCancel = () => {
     navigate("/");
   };
 
@@ -43,7 +57,7 @@ const UpdateTodo = () => {
           onChange={(e) => setUpdatedCategory(e.target.value)}
         />
         <button type="submit">Update</button>
-        <button onClick={handleCancle}>Cancle</button>
+        <button onClick={handleCancel}>Cancel</button>
       </form>
     </div>
   );

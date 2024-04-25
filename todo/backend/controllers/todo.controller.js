@@ -51,4 +51,22 @@ const updateTodo = async (req, res) => {
     }
 }
 
-export { getTodos, createTodo, deleteTodo, getTodoforUpdate, updateTodo };
+const getFilterTodos = async (req, res) => {
+    try {
+        const { category } = req.query;
+        let todos;
+        if (category) {
+            // If category is provided, filter todos by category
+            todos = await Todo.find({ category });
+        } else {
+            // If category is not provided, fetch all todos
+            todos = await Todo.find();
+        }
+        res.json(todos);
+    } catch (error) {
+        console.error('Error fetching todos:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+export { getTodos, createTodo, deleteTodo, getTodoforUpdate, updateTodo, getFilterTodos};
