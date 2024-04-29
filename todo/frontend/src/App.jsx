@@ -1,110 +1,116 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import LoginPage from "./LoginPage";
+axios.defaults.withCredentials = true;
 
 const App = () => {
-  const navigate = useNavigate();
 
-  const [todos, setTodos] = useState([]);
-  const [newTodo, setNewTodo] = useState("");
-  const [category, setCategory] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+//   const navigate = useNavigate();
+
+//   const [todos, setTodos] = useState([]);
+//   const [newTodo, setNewTodo] = useState("");
+//   const [category, setCategory] = useState("");
+//   const [categories, setCategories] = useState([]);
+//   const [selectedCategory, setSelectedCategory] = useState('');
 
 
-  useEffect(() => {
-    // Fetch all todos initially
-    const getTasks = async () => {
-      const data = await axios.get('/todos');
-      setTodos(data.data);
+//   useEffect(() => {
+//     // Fetch all todos initially
+//     const getTasks = async () => {
+//       const data = await axios.get('/todos');
+//       setTodos(data.data);
 
-      // Extracting categories from todos and adding them to categories state
-      const allCategories = data.data.map(todo => todo.category);
-      const uniqueCategories = [...new Set(allCategories)];
-      setCategories(uniqueCategories);
-    };
+//       // Extracting categories from todos and adding them to categories state
+//       const allCategories = data.data.map(todo => todo.category);
+//       const uniqueCategories = [...new Set(allCategories)];
+//       setCategories(uniqueCategories);
+//     };
 
-    if(!selectedCategory) {
-      getTasks();
-    }
+//     if(!selectedCategory) {
+//       getTasks();
+//     }
 
  
-}, [todos]);
+// }, [todos]);
 
 
-  const handlenewTodo = async (e) => {
-    e.preventDefault();
+//   const handlenewTodo = async (e) => {
+//     e.preventDefault();
 
-    if (!newTodo.trim() || !category.trim()) return;
+//     if (!newTodo.trim() || !category.trim()) return;
 
-    const data = await axios.post("/todos", {
-      title: newTodo,
-      category: category,
-    });
-    setTodos([...todos, data.data]);
-    setNewTodo("");
-    setCategory("");
-  };
+//     const data = await axios.post("/todos", {
+//       title: newTodo,
+//       category: category,
+//     });
+//     setTodos([...todos, data.data]);
+//     setNewTodo("");
+//     setCategory("");
+//   };
 
-  const deleteTodo = async (id) => {
-    await axios.delete(`/todos/${id}`);
-    setTodos(todos.filter((todo) => todo._id !== id));
-  };
+//   const deleteTodo = async (id) => {
+//     await axios.delete(`/todos/${id}`);
+//     setTodos(todos.filter((todo) => todo._id !== id));
+//   };
 
-  const handleCategoryChange =async (e) => {
-    const selectedValue = e.target.value;
-    setSelectedCategory(selectedValue);
-    console.log(selectedValue); // Log the selected category here
-    // axios
+//   const handleCategoryChange =async (e) => {
+//     const selectedValue = e.target.value;
+//     setSelectedCategory(selectedValue);
+//     console.log(selectedValue); // Log the selected category here
+//     // axios
 
-   const res =  await axios.get(`/todos/category?category=${selectedValue}`)
-   setTodos(res.data)
-  };
+//    const res =  await axios.get(`/todos/category?category=${selectedValue}`)
+//    setTodos(res.data)
+//   };
 
   return (
-    <div>
-      <div>
-        <h1>category</h1>
+    // <div>
+    //   <div>
+    //     <h1>category</h1>
       
-        <select value={selectedCategory} onChange={handleCategoryChange}>
-        <option value="">Select Category</option>
-        {categories.map((cat, index) => (
-          <option key={index} value={cat}>{cat}</option>
-        ))}
-      </select>
+    //     <select value={selectedCategory} onChange={handleCategoryChange}>
+    //     <option value="">Select Category</option>
+    //     {categories.map((cat, index) => (
+    //       <option key={index} value={cat}>{cat}</option>
+    //     ))}
+    //   </select>
 
-      </div>
-      <div>
-        <form action="" onSubmit={handlenewTodo}>
-          <input
-            value={newTodo}
-            onChange={(e) => setNewTodo(e.target.value)}
-            type="text"
-            name=""
-            id=""
-          />
-          <input
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            type="text"
-            name=""
-            id=""
-          />
-          <button type="submit">add todo</button>
-        </form>
+    //   </div>
+    //   <div>
+    //     <form action="" onSubmit={handlenewTodo}>
+    //       <input
+    //         value={newTodo}
+    //         onChange={(e) => setNewTodo(e.target.value)}
+    //         type="text"
+    //         name=""
+    //         id=""
+    //       />
+    //       <input
+    //         value={category}
+    //         onChange={(e) => setCategory(e.target.value)}
+    //         type="text"
+    //         name=""
+    //         id=""
+    //       />
+    //       <button type="submit">add todo</button>
+    //     </form>
 
-        {todos.map((todo) => (
-          <div key={todo._id}>
-            <h1 key={todo._id}>
-              {todo.title}--{todo.category}
-            </h1>
-            <button onClick={() => deleteTodo(todo._id)}>delete todo</button>
-            <button onClick={() => navigate(`/todos/update/${todo._id}`)}>
-              edit todo
-            </button>
-          </div>
-        ))}
-      </div>
+    //     {todos.map((todo) => (
+    //       <div key={todo._id}>
+    //         <h1 key={todo._id}>
+    //           {todo.title}--{todo.category}
+    //         </h1>
+    //         <button onClick={() => deleteTodo(todo._id)}>delete todo</button>
+    //         <button onClick={() => navigate(`/todos/update/${todo._id}`)}>
+    //           edit todo
+    //         </button>
+    //       </div>
+    //     ))}
+    //   </div>
+    // </div>
+    <div>
+      <LoginPage />
     </div>
   );
 };

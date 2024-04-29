@@ -2,6 +2,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './db/index.js';
 import todoRouter from './routers/todo.router.js';
+import userRouter from './routers/user.router.js';
+import cors from 'cors';
 
 dotenv.config({
     path: './.env'
@@ -11,20 +13,26 @@ connectDB();
 
 const app = express();
 app.use(express.json());
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}))  
 app.use('/todos', todoRouter);
+
+app.use("/application", userRouter)
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
     const message = err.message || 'Internal Server Error';
     res.status(statusCode).json({
         sucess: false,
-        message,
+        message: message
 
     });
 });
 
 app.listen(process.env.PORT, () => {
-    console.log('Server is running on http://localhost:3000');
+    console.log('Server is running on http://localhost:5000');
 });
 
 
