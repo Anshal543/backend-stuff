@@ -1,11 +1,15 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginPage from "./LoginPage";
+import axios from "axios";
 axios.defaults.withCredentials = true;
-
+import { UserContext } from "./context/UserContext";
+// import VerifyLogin from "./VerifyLogin";
 const App = () => {
 
+  const { user } = useContext(UserContext);
+
+  console.log(user);
 //   const navigate = useNavigate();
 
 //   const [todos, setTodos] = useState([]);
@@ -110,7 +114,15 @@ const App = () => {
     //   </div>
     // </div>
     <div>
-      <LoginPage />
+      {
+        user ? (
+          <h1>Welcome {user.rest.username}</h1>
+        ):(
+          <LoginPage />
+        )
+      }
+      {/* <LoginPage /> */}
+
     </div>
   );
 };

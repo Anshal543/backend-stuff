@@ -42,4 +42,21 @@ const getUsers = async (req, res, next) => {
 
 };
 
-export { createUser, getUsers };
+const getVerifyUser = async (req, res, next) => {
+    try {
+        const token = req.cookies.token;
+        if (!token) {
+            return res.status(401).json({ message: "Unauthorized" })
+        }
+        const verified = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(verified.id);
+        const { password, ...rest } = user._doc;
+
+        res.status(200).json({ rest });
+    }
+    catch (error) {
+        next(error);
+    }
+
+}
+export { createUser, getUsers, getVerifyUser};
