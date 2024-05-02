@@ -4,6 +4,7 @@ import connectDB from './db/index.js';
 import todoRouter from './routers/todo.router.js';
 import userRouter from './routers/user.router.js';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 dotenv.config({
     path: './.env'
@@ -13,13 +14,14 @@ connectDB();
 
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
 }))  
+app.use("/application", userRouter)
 app.use('/todos', todoRouter);
 
-app.use("/application", userRouter)
 
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;

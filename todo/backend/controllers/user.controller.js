@@ -2,7 +2,7 @@ import { User } from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken"
 
-const createUser = async (req, res, next) => {
+const register = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
         const uniqueUser = await User.find({ username })
@@ -22,7 +22,8 @@ const createUser = async (req, res, next) => {
     }
 };
 
-const getUsers = async (req, res, next) => {
+const login = async (req, res, next) => {
+
     try {
         const { email, password } = req.body;
         const checkUser = await User.find({ email })  //find return array, findOne return object
@@ -32,9 +33,10 @@ const getUsers = async (req, res, next) => {
         const validPassword = bcrypt.compareSync(password, checkUser[0].password);
         if (!validPassword) {
             return res.status(400).json({ message: "Invalid password" })
+
         }
         const token = jwt.sign({ id: checkUser[0]._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-        res.cookie('token', token, { httpOnly: true }).json({ user: checkUser[0] });
+        res.cookie('token', token, { httpOnly: true }).json({ message: "Login successfully" });
         // res.status(200).json({ checkUser });
     } catch (error) {
         next(error);
@@ -42,14 +44,19 @@ const getUsers = async (req, res, next) => {
 
 };
 
-const getVerifyUser = async (req, res, next) => {
+const auth = async (req, res, next) => {
     try {
         const token = req.cookies.token;
+        // const {id} = req.params;
+
         if (!token) {
-            return res.status(401).json({ message: "Unauthorized" })
+            return res.status(401).json({ message: "you dont have any user" })
         }
         const verified = jwt.verify(token, process.env.JWT_SECRET);
         const user = await User.findById(verified.id);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
         const { password, ...rest } = user._doc;
 
         res.status(200).json({ rest });
@@ -59,4 +66,27 @@ const getVerifyUser = async (req, res, next) => {
     }
 
 }
-export { createUser, getUsers, getVerifyUser};
+
+const logout = async (req, res, next) => {
+    try {
+        res.clearCookie('token').json({ message: "Logout successfully" });
+    } catch (error) {
+        next(error);
+    }
+}
+
+const updateUserName = async (req, res, next) => {
+    try {
+        console.log(req.user);
+        const { id } = req.params;
+        const { name } = req.body;
+        console.log(id, name);
+        const updatedUser = await User.findByIdAndUpdate(id, { username: name }, { new: true });
+        res.status(200).json({ updatedUser });
+
+    } catch (error) {
+        next(error);
+    }
+}
+
+export { register, login, auth,logout,updateUserName };
