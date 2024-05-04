@@ -7,9 +7,11 @@ const userVerification = async (req, res, next) => {
         if (!token) {
             return res.status(401).json({ message: "You are not authenticated" });
         }
-        const verified = jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-            const users = User.findById(user.id);
+         jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+            const users = await User.findById(decoded.id);
+            console.log("user");
             req.user = users;
+            console.log("user1");
             next();
         });
 

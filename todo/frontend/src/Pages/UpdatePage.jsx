@@ -21,12 +21,14 @@ const UpdatePage = () => {
    
     const handleUpdate = async () => {
         try {
-            const res = await axios.put(`http://localhost:5000/application/${user.rest._id}`, {
+            console.log("enter ");
+            const res = await axios.put(`http://localhost:5000/application/update`, {
                 name: newName
             })
+            console.log("enter update");
             if(res.status == 200){
                 console.log(res);
-                window.location.href = '/'
+                window.location.href = '/update'
             }
         } catch (error) {
             console.log(error);

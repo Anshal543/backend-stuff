@@ -35,7 +35,7 @@ const login = async (req, res, next) => {
             return res.status(400).json({ message: "Invalid password" })
 
         }
-        const token = jwt.sign({ id: checkUser[0]._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+        const token = jwt.sign({ id: checkUser[0]._id,user:checkUser[0].username }, process.env.JWT_SECRET, { expiresIn: '1d' });
         res.cookie('token', token, { httpOnly: true }).json({ message: "Login successfully" });
         // res.status(200).json({ checkUser });
     } catch (error) {
@@ -78,7 +78,8 @@ const logout = async (req, res, next) => {
 const updateUserName = async (req, res, next) => {
     try {
         console.log(req.user);
-        const { id } = req.params;
+        // const { id } = req.params;
+        const id = req.user._id;
         const { name } = req.body;
         console.log(id, name);
         const updatedUser = await User.findByIdAndUpdate(id, { username: name }, { new: true });

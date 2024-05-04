@@ -9,7 +9,7 @@ router.post("/register",register)
 router.post("/login",login)
 router.get("/auth",auth)
 router.get("/logout",logout)
-router.put("/:id",userVerification,updateUserName)
+router.put("/update",userVerification,updateUserName)
 
 
 
